@@ -5,11 +5,14 @@ namespace App\Entity;
 use App\Entity\Traits\Timestampable;
 use App\Repository\PinRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=PinRepository::class)
  * @ORM\Table(name="pins")
+ * @Vich\Uploadable
  * @ORM\HasLifecycleCallbacks()
  */
 class Pin
@@ -41,7 +44,13 @@ class Pin
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $imageName;
-    
+
+    /**
+     * @Vich\UploadableField(mapping="pin_image", fileNameProperty="imageName")
+     * @var File|null
+     */
+    private $imageFile;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -81,5 +90,22 @@ class Pin
         $this->imageName = $imageName;
 
         return $this;
+    }
+
+    /**
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
+     */
+    public function setImageFile(?File $imageFile = null): void
+    {
+        $this->imageFile = $imageFile;
+
+        if (null !== $imageFile) {
+            $this->setUpdatedAt(new \DateTimeImmutable());
+        }
+    }
+
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
     }
 }
