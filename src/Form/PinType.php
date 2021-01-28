@@ -19,10 +19,8 @@ class PinType extends AbstractType
                 "label" => "Image (JPG or PNG file)",
                 "required" => false,
                 "allow_delete" => true,
-                // "download_label" => "Télécharger l'image",
-                // "download_uri" => true,
-                // "image_uri" => true,
-                // "asset_helper" => true
+                "imagine_pattern" => "squared_thumbnail_small",
+                "download_uri" => false
             ])
             ->add('title', TextType::class)
             ->add('description', TextareaType::class);
